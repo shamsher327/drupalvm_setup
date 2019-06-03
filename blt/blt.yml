@@ -1,0 +1,55 @@
+project:
+  machine_name: mse
+  prefix: MSE
+  human_name: mse
+  profile:
+    name: lightnest
+  local:
+    protocol: http
+    hostname: '127.0.0.1:8888'
+git:
+  default_branch: master
+  remotes:
+    - 'nestledsu2@svn-613.enterprise-g1.hosting.acquia.com:nestledsu2.git'
+  hooks:
+    commit-msg: false
+deploy:
+  tag_source: true
+drush:
+  aliases:
+    remote: nestledsu2.01test
+    local: self
+    ci: self
+  default_alias: '${drush.aliases.local}'
+modules:
+  local:
+    enable: [dblog, devel, seckit, views_ui, config_split]
+    uninstall: [acsf, acquia_connector, shield, acsf, acsf, acsf, acsf, acsf, acsf, acsf, acsf, acsf, acsf, acsf, acsf, acsf, acsf, acsf]
+  ci:
+    enable: [config_split]
+    uninstall: [acquia_connector, shield]
+  dev:
+    enable: [acquia_connector, shield, config_split]
+    uninstall: {  }
+  test:
+    enable: [acquia_connector, shield, config_split]
+    uninstall: [devel, views_ui]
+  prod:
+    enable: [acquia_connector, config_split]
+    uninstall: [devel, views_ui, shield]
+behat:
+  paths:
+    - '${repo.root}/tests/behat'
+phpcs:
+  filesets:
+    - files.php.custom.modules
+    - files.php.tests
+disable-targets:
+  validate:
+    phpcs: true
+  tests:
+    behat: true
+    phpunit: true
+cm:
+  strategy: config-split
+  allow-overrides: true
